@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Математичний калькулятор</title>
+</head>
+<body>
+<h1>Математичний калькулятор</h1>
+
+<form id="calculatorForm">
+    <label for="expression">Ввести значення:</label>
+    <input
+            type="text"
+            id="expression"
+            placeholder="Наприклад: 2+2*2"
+            required
+    >
+    <button type="submit">=</button>
+</form>
+
+<p>Результат: <span id="result">—</span></p>
+
+<script>
+    const form = document.getElementById("calculatorForm");
+    const input = document.getElementById("expression");
+    const result = document.getElementById("result");
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        try {
+            const response = await fetch(
+                "/calculate?expression=" +
+                encodeURIComponent(input.value)
+            );
+
+            if (!response.ok) {
+                throw new Error("Не вдалося обчислити значення");
+            }
+
+            result.textContent = await response.text();
+        } catch (error) {
+            result.textContent = "Помилка: " + error.message;
+        }
+    });
+</script>
+</body>
+</html>
